@@ -5,6 +5,12 @@
 #   Dependencies: acpi - yad
 #   sudo apt-get install acpi && sudo apt-get install yad
 
+if [ ! -e /usr/bin/yad ] && [ ! -e /usr/bin/acpi ];
+then
+    echo "The script could not find the required dependencies"
+    exit
+fi
+
 while true;
 do
     sleep 60
