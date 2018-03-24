@@ -5,18 +5,16 @@
 #   Dependencies: acpi - yad
 #   sudo apt-get install acpi && sudo apt-get install yad
 
-if [ ! -e /usr/bin/yad ] && [ ! -e /usr/bin/acpi ];
+if [ ! -e /usr/bin/yad ] || [ ! -e /usr/bin/acpi ];
 then
     echo "The script could not find the required dependencies"
-    exit
+    exit 1
 fi
 
 while true;
 do
-    sleep 60
-    valueCurrent=$(acpi -b | cut -d " " -f 4 | sed 's/,//g' | sed 's/%//g')
-    if [ "$valueCurrent" == "100" ];
-    then
+    acpi -b |
+    awk '$4 !~ /100/ {exit 1}' && {
         yad --center                        \
         --title="Battery Mouse"             \
         --image="baterriy.png"              \
@@ -26,6 +24,7 @@ do
         --width=300                         \
         --height=100                        \
         --text-align=center                 \
-        --window-icon="baterry.png"         
-    fi
+        --window-icon="baterry.png";
+        exit; }
+    sleep 60
 done
